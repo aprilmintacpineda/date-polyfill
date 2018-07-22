@@ -1,0 +1,37 @@
+{
+  "name": "date-polyfill",
+  "version": "1.0.0",
+  "description": "Polyfill for rich date features.",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "clear && npm run build && jest --coverage",
+    "build": "npm run eslint && babel src --out-dir lib",
+    "eslint": "eslint src/**/*.js __tests__/**/*.js --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/aprilmintacpineda/date-polyfill.git"
+  },
+  "keywords": [
+    "polyfill",
+    "date",
+    "datetime"
+  ],
+  "author": "April Mintac Pineda",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aprilmintacpineda/date-polyfill/issues"
+  },
+  "homepage": "https://github.com/aprilmintacpineda/date-polyfill#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.6",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-minify": "^0.4.3",
+    "eslint": "^5.2.0",
+    "jest": "^23.4.1"
+  }
+}
