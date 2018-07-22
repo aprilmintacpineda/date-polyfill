@@ -8,10 +8,10 @@ A lightweight (2.3K, minified) polyfill for rich date features.
 
 Then add the following before your other codes.
 
-
-
 ```jsx
 import 'date-polyfill';
+// or
+require('date-polyfill');
 ```
 
 ## Table of symbols
