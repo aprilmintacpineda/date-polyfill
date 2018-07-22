@@ -1,6 +1,6 @@
 # date-polyfill.js
 
-A lightweight (2.3K, minified) polyfill for rich date features.
+A lightweight (2.4K, minified) polyfill for rich date features.
 
 ## Usage
 
