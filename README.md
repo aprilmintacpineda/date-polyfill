@@ -26,7 +26,7 @@ The following symbols are used throughout the operations.
 |`%D`|The **date** prefixed with `0`.|`02`, `17`
 |`%d`|The **date** without the prefixed `0`.|`2`, `17`
 |`%D`@`timeDiff` method|The number of days prefixed with `0`.|`02`, `17`
-|`%d`@`timeDiff` method|The number of days.|`2`, `17`
+|`%d`@`timeDiff` method|The number of days without the prefixed `0`.|`2`, `17`
 |`%M`|The **month** prefixed with `0`.|`02`, `10`
 |`%m`|The **month** without the prefixed `0`.|`2`, `10`.
 |`%f`|The **full month name**.|`January`
