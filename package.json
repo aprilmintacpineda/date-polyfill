@@ -1,6 +1,6 @@
 {
   "name": "date-polyfill",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Polyfill for rich date features.",
   "main": "lib/index.js",
   "directories": {
