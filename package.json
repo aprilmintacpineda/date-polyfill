@@ -3,9 +3,12 @@
   "version": "1.0.5",
   "description": "Polyfill for rich date features.",
   "main": "lib/index.js",
-  "directories": {
-    "lib": "lib"
-  },
+  "files": [
+    "lib/*",
+    "package.json",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "test": "clear && npm run build && jest --coverage",
     "build": "npm run eslint && babel src --out-dir lib",
