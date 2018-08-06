@@ -32,6 +32,17 @@ describe('Format', () => {
     });
   });
 
+  describe('hour return 12 when hour <= 12', () => {
+    test('%H', () => {
+      const date2 = new Date('July 2, 2017 12:03:05');
+      expect(date2.format('%H')).toEqual('12');
+    });
+    test('%h', () => {
+      const date2 = new Date('July 2, 2017 12:03:05');
+      expect(date2.format('%h')).toEqual('12');
+    });
+  });
+
   describe('it combines symbols', () => {
     test('%f %D, %y', () => {
       expect(date.format('%f %D, %y')).toEqual('July 02, 2017');
