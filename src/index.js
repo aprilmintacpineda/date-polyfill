@@ -22,6 +22,11 @@
     }, format);
   }
 
+  function toTwelveHourFormat (hours) {
+    if (hours > 12) return hours % 12;
+    return hours;
+  }
+
   Date.prototype.format = function (format) {
     // January => Jan, Sunday => Sun
     function shorten (s, l) {
@@ -38,7 +43,7 @@
       '%f': () => monthNames[this.getMonth()],
       '%w': () => weekNames[this.getDay()],
       '%i': () => this.getHours(),
-      '%h': () => this.getHours() % 12,
+      '%h': () => toTwelveHourFormat(this.getHours()),
       '%n': () => this.getMinutes(),
       '%s': () => this.getSeconds(),
       '%a': () => this.getHours() >= 12? 'PM' : 'AM',
@@ -53,7 +58,7 @@
       '%I': () => prefixZero(this.getHours()),
       '%M': () => prefixZero(this.getMonth() + 1),
       '%D': () => prefixZero(this.getDate()),
-      '%H': () => prefixZero(this.getHours() % 12),
+      '%H': () => prefixZero(toTwelveHourFormat(this.getHours())),
       '%N': () => prefixZero(this.getMinutes()),
       '%S': () => prefixZero(this.getSeconds())
     };
