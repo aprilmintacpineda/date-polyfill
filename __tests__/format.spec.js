@@ -34,12 +34,16 @@ describe('Format', () => {
 
   describe('hour return 12 when hour <= 12', () => {
     test('%H', () => {
-      const date2 = new Date('July 2, 2017 12:03:05');
+      const date2 = new Date('July 2, 2017 12:03:05 PM');
+      const date3 = new Date('July 2, 2017 12:03:05 AM');
       expect(date2.format('%H')).toEqual('12');
+      expect(date3.format('%H')).toEqual('12');
     });
     test('%h', () => {
-      const date2 = new Date('July 2, 2017 12:03:05');
+      const date2 = new Date('July 2, 2017 12:03:05 PM');
+      const date3 = new Date('July 2, 2017 12:03:05 AM');
       expect(date2.format('%h')).toEqual('12');
+      expect(date3.format('%h')).toEqual('12');
     });
   });
 

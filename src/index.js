@@ -23,8 +23,9 @@
   }
 
   function toTwelveHourFormat (hours) {
-    if (hours > 12) return hours % 12;
-    return hours;
+    const twelveHourFormat = hours % 12;
+    if (twelveHourFormat === 0) return 12;
+    return twelveHourFormat;
   }
 
   Date.prototype.format = function (format) {
