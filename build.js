@@ -13,8 +13,7 @@ const transforms = [
         'minify-dead-code-elimination',
         'transform-minify-booleans',
         'minify-constant-folding',
-        'minify-flip-comparisons',
-        'minify-guarded-expressions'
+        'minify-flip-comparisons'
       ]
     }),
   content =>
