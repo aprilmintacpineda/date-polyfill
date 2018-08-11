@@ -8,7 +8,6 @@ const transforms = [
   content =>
     babelCore.transform(content, {
       babelrc: false,
-      presets: ['env'],
       plugins: [
         'minify-dead-code-elimination',
         'transform-minify-booleans',
