@@ -1,19 +1,17 @@
-(() => {
-  function prefixZero (s) {
-    return s.toString().length === 1 ? `0${s}` : s;
-  }
+/** @format */
 
+(() => {
   function parseSymbols (ms, format) {
     const allowedFormats = {
-      '%d': () => ms > 0? parseInt(ms / 86400000) : 0,
-      '%h': () => ms > 0? parseInt((ms / 3600000) % 60) : 0,
-      '%n': () => ms > 0? parseInt((ms / 60000) % 60) : 0,
-      '%s': () => ms > 0? parseInt((ms / 1000) % 60) : 0,
+      '%d': () => (ms > 0 ? parseInt(ms / 86400000) : 0),
+      '%h': () => (ms > 0 ? parseInt((ms / 3600000) % 60) : 0),
+      '%n': () => (ms > 0 ? parseInt((ms / 60000) % 60) : 0),
+      '%s': () => (ms > 0 ? parseInt((ms / 1000) % 60) : 0),
       // zero prefixed
-      '%D': () => prefixZero(ms > 0? parseInt(ms / 86400000) : 0),
-      '%H': () => prefixZero(ms > 0? parseInt((ms / 3600000) % 60) : 0),
-      '%N': () => prefixZero(ms > 0? parseInt((ms / 60000) % 60) : 0),
-      '%S': () => prefixZero(ms > 0? parseInt((ms / 1000) % 60) : 0)
+      '%D': () => (ms > 0 ? parseInt(ms / 86400000) : 0).toString().padStart(2, '0'),
+      '%H': () => (ms > 0 ? parseInt((ms / 3600000) % 60) : 0).toString().padStart(2, '0'),
+      '%N': () => (ms > 0 ? parseInt((ms / 60000) % 60) : 0).toString().padStart(2, '0'),
+      '%S': () => (ms > 0 ? parseInt((ms / 1000) % 60) : 0).toString().padStart(2, '0')
     };
 
     return Object.keys(allowedFormats).reduce((d, formatKey) => {
@@ -31,12 +29,41 @@
   Date.prototype.format = function (format) {
     // January => Jan, Sunday => Sun
     function shorten (s, l) {
-      const reversed = s.toString().split('').reverse().join('');
-      return reversed.substr(reversed.length - l).split('').reverse().join('');
+      const reversed = s
+        .toString()
+        .split('')
+        .reverse()
+        .join('');
+      return reversed
+        .substr(reversed.length - l)
+        .split('')
+        .reverse()
+        .join('');
     }
 
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    const weekNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+    const weekNames = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday'
+    ];
     const allowedFormats = {
       '%y': () => this.getFullYear(),
       '%m': () => this.getMonth() + 1,
@@ -47,7 +74,7 @@
       '%h': () => toTwelveHourFormat(this.getHours()),
       '%n': () => this.getMinutes(),
       '%s': () => this.getSeconds(),
-      '%a': () => this.getHours() >= 12? 'PM' : 'AM',
+      '%a': () => (this.getHours() >= 12 ? 'PM' : 'AM'),
       // shortened
       '%Y': () => {
         const year = this.getFullYear().toString();
@@ -56,12 +83,27 @@
       '%F': () => shorten(monthNames[this.getMonth()], 3),
       '%W': () => shorten(weekNames[this.getDay()], 3),
       // zero prefixed
-      '%I': () => prefixZero(this.getHours()),
-      '%M': () => prefixZero(this.getMonth() + 1),
-      '%D': () => prefixZero(this.getDate()),
-      '%H': () => prefixZero(toTwelveHourFormat(this.getHours())),
-      '%N': () => prefixZero(this.getMinutes()),
-      '%S': () => prefixZero(this.getSeconds())
+      '%I': () =>
+        this.getHours()
+          .toString()
+          .padStart(2, '0'),
+      '%M': () => (this.getMonth() + 1).toString().padStart(2, '0'),
+      '%D': () =>
+        this.getDate()
+          .toString()
+          .padStart(2, '0'),
+      '%H': () =>
+        toTwelveHourFormat(this.getHours())
+          .toString()
+          .padStart(2, '0'),
+      '%N': () =>
+        this.getMinutes()
+          .toString()
+          .padStart(2, '0'),
+      '%S': () =>
+        this.getSeconds()
+          .toString()
+          .padStart(2, '0')
     };
 
     return Object.keys(allowedFormats).reduce((d, formatKey) => {
@@ -94,19 +136,20 @@
         symbols.join('|')
       ).split('|');
     } else {
-      replacedString = parseSymbols(
-        currentTime - pastDateMilliseconds,
-        symbols.join('|')
-      ).split('|');
+      replacedString = parseSymbols(currentTime - pastDateMilliseconds, symbols.join('|')).split(
+        '|'
+      );
     }
 
-    return symbols.reduce((compiled, key, i) => {
-      const value = parseInt(replacedString[i]);
-      const nameKey = key.toLowerCase();
-      if (value === 0 || names[nameKey] === undefined) return compiled;
-      const str = compiled? compiled + ' ' : '';
-      if (value === 1) return str + replacedString[i] + ' ' + names[nameKey];
-      return str + replacedString[i] + ' ' + names[nameKey] + 's';
-    }, null) + ' ago';
+    return (
+      symbols.reduce((compiled, key, i) => {
+        const value = parseInt(replacedString[i]);
+        const nameKey = key.toLowerCase();
+        if (value === 0 || names[nameKey] === undefined) return compiled;
+        const str = compiled ? compiled + ' ' : '';
+        if (value === 1) return str + replacedString[i] + ' ' + names[nameKey];
+        return str + replacedString[i] + ' ' + names[nameKey] + 's';
+      }, null) + ' ago'
+    );
   };
 })();
