@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "test": "clear && npm run build && jest --coverage --env=node",
-    "build": "npm run eslint && babel src --out-dir lib",
+    "build": "clear && npm run lint && babel-node build.js",
     "eslint": "eslint \"src/**/*.js\" \"__tests__/**/*.js\" --fix",
     "prettier": "prettier \"src/**/*.js\" --write",
     "lint": "npm run prettier && npm run eslint"
@@ -33,11 +33,18 @@
   "homepage": "https://github.com/aprilmintacpineda/date-polyfill#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.6",
+    "babel-plugin-minify-constant-folding": "^0.4.3",
+    "babel-plugin-minify-dead-code-elimination": "^0.4.3",
+    "babel-plugin-minify-flip-comparisons": "^0.4.3",
+    "babel-plugin-minify-guarded-expressions": "^0.4.3",
+    "babel-plugin-transform-minify-booleans": "^6.9.4",
     "babel-preset-env": "^1.7.0",
     "babel-preset-minify": "^0.4.3",
     "eslint": "^5.3.0",
     "jest": "^23.4.2",
-    "prettier": "^1.14.2"
+    "prettier": "^1.14.2",
+    "readdir-plus": "^1.1.0"
   }
 }
