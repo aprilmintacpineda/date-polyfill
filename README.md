@@ -2,7 +2,7 @@
 
 # date-polyfill.js
 
-A lightweight (2.4K, minified) polyfill for rich date features.
+Added features to Javascript's Date Interface.
 
 ## Usage
 
