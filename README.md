@@ -4,6 +4,8 @@
 
 Added features to Javascript's Date Interface.
 
+Demo: https://aprilmintacpineda.github.io/date-polyfill/
+
 ## Usage
 
 `npm install --save date-polyfill`
