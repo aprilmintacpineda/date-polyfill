@@ -11,6 +11,9 @@ describe('Format', () => {
     test('month', () => {
       expect(date.format('%m')).toEqual('7');
       expect(date.format('%M')).toEqual('07');
+
+      expect(date.format('%f')).toEqual('July');
+      expect(date.format('%F')).toEqual('Jul');
     });
     test('date', () => {
       expect(date.format('%d')).toEqual('2');
@@ -38,10 +41,6 @@ describe('Format', () => {
       const date3 = new Date('July 2, 2017 12:03:05 AM');
       expect(date2.format('%H')).toEqual('12');
       expect(date3.format('%H')).toEqual('12');
-    });
-    test('%h', () => {
-      const date2 = new Date('July 2, 2017 12:03:05 PM');
-      const date3 = new Date('July 2, 2017 12:03:05 AM');
       expect(date2.format('%h')).toEqual('12');
       expect(date3.format('%h')).toEqual('12');
     });
@@ -50,20 +49,29 @@ describe('Format', () => {
   describe('it combines symbols', () => {
     test('%f %D, %y', () => {
       expect(date.format('%f %D, %y')).toEqual('July 02, 2017');
+      expect(date.format('%F %d, %Y')).toEqual('Jul 2, 17');
     });
     test('%M-%D-%y', () => {
       expect(date.format('%M-%D-%y')).toEqual('07-02-2017');
+      expect(date.format('%m-%d-%Y')).toEqual('7-2-17');
     });
     test('%M/%D/%Y', () => {
       expect(date.format('%M/%D/%Y')).toEqual('07/02/17');
+      expect(date.format('%m/%d/%y')).toEqual('7/2/2017');
     });
     test('%f %D, %y %H:%N:%S %a', () => {
       expect(date.format('%f %D, %y %H:%N:%S %a')).toEqual('July 02, 2017 02:03:05 AM');
       expect(new Date('July 2, 2017 21:03:05').format('%f %D, %y %H:%N:%S %a')).toEqual('July 02, 2017 09:03:05 PM');
+
+      expect(date.format('%F %d, %Y %h:%n:%s %a')).toEqual('Jul 2, 17 2:3:5 AM');
+      expect(new Date('July 2, 2017 21:03:05').format('%F %d, %Y %h:%n:%s %a')).toEqual('Jul 2, 17 9:3:5 PM');
     });
     test('%f %D, %y %I:%N:%S', () => {
       expect(date.format('%f %D, %y %I:%N:%S')).toEqual('July 02, 2017 02:03:05');
       expect(new Date('July 2, 2017 21:03:05').format('%f %D, %y %I:%N:%S')).toEqual('July 02, 2017 21:03:05');
+
+      expect(date.format('%F %d, %Y %i:%n:%s')).toEqual('Jul 2, 17 2:3:5');
+      expect(new Date('July 2, 2017 21:03:05').format('%F %d, %Y %i:%n:%s')).toEqual('Jul 2, 17 21:3:5');
     });
   });
 });

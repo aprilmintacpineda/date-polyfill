@@ -1,8 +1,9 @@
 /** @format */
 
-var babelCore = require('babel-core');
-var readDir = require('readdir-plus');
-var fs = require('fs');
+const babelCore = require('babel-core');
+const readDir = require('readdir-plus');
+const fs = require('fs');
+const path = require('path');
 
 const transforms = [
   content =>
@@ -18,37 +19,30 @@ const transforms = [
   content =>
     babelCore.transform(content, {
       babelrc: false,
-      presets: ['env', 'minify']
+      comments: true,
+      presets: ['env']
     })
 ];
 
-new Promise((resolve, reject) =>
-  readDir(__dirname + '/src/', { content: true }, (err, files) => {
-    if (err) {
-      reject(err);
-    } else {
-      resolve(files);
-    }
-  })
-)
-  .then(files => {
-    for (
-      let filesCopy = [].concat(files), file = filesCopy.shift();
-      Boolean(file);
-      file = filesCopy.shift()
-    ) {
-      let content = fs.readFileSync(file.path, 'utf8').toString();
+const indexJsPath = path.resolve(__dirname, './src/index.js');
 
-      for (
-        let transformsCopy = [].concat(transforms), transform = transformsCopy.shift();
-        Boolean(transform);
-        transform = transformsCopy.shift()
-      ) {
-        const result = transform(content);
-        content = result.code;
-      }
+let content = fs.readFileSync(indexJsPath, 'utf8').toString();
 
-      fs.writeFileSync(__dirname + '/lib/' + file.name, content, 'utf8');
-    }
-  })
-  .catch(err => console.error(err));
+for (
+  let transformsCopy = [].concat(transforms), transform = transformsCopy.shift();
+  Boolean(transform);
+  transform = transformsCopy.shift()
+) {
+  const result = transform(content);
+  content = result.code;
+}
+
+fs.writeFileSync(path.resolve(__dirname, './lib/index.js'), content, 'utf8');
+fs.writeFileSync(
+  path.resolve(__dirname, './lib/index.min.js'),
+  babelCore.transform(content, {
+    babelrc: false,
+    presets: ['minify']
+  }),
+  'utf8'
+);

@@ -1,17 +1,84 @@
 /** @format */
 
 (() => {
-  function parseSymbols (ms, format) {
+  function parseSymbols (ms1, ms2, format) {
     const allowedFormats = {
-      '%d': () => (ms > 0 ? parseInt(ms / 86400000) : 0),
-      '%h': () => (ms > 0 ? parseInt((ms / 3600000) % 60) : 0),
-      '%n': () => (ms > 0 ? parseInt((ms / 60000) % 60) : 0),
-      '%s': () => (ms > 0 ? parseInt((ms / 1000) % 60) : 0),
+      '%y': () => {
+        const date1 = new Date(ms1);
+        const date2 = new Date(ms2);
+        return Math.abs(date1.getFullYear() - date2.getFullYear());
+      },
+      '%d': () => {
+        const diff = ms1 - ms2;
+        if (diff <= 0) return 0;
+
+        if (format.indexOf('%Y') > -1 || format.indexOf('%y') > -1) {
+          return parseInt((diff / 86400000) % 365);
+        }
+
+        return parseInt(diff / 86400000);
+      },
+      '%h': () => {
+        const diff = ms1 - ms2;
+        if (diff <= 0) return 0;
+        return parseInt((diff / 3600000) % 60);
+      },
+      '%n': () => {
+        const diff = ms1 - ms2;
+        if (diff <= 0) return 0;
+        return parseInt((diff / 60000) % 60);
+      },
+      '%s': () => {
+        const diff = ms1 - ms2;
+        if (diff <= 0) return 0;
+        return parseInt((diff / 1000) % 60);
+      },
       // zero prefixed
-      '%D': () => (ms > 0 ? parseInt(ms / 86400000) : 0).toString().padStart(2, '0'),
-      '%H': () => (ms > 0 ? parseInt((ms / 3600000) % 60) : 0).toString().padStart(2, '0'),
-      '%N': () => (ms > 0 ? parseInt((ms / 60000) % 60) : 0).toString().padStart(2, '0'),
-      '%S': () => (ms > 0 ? parseInt((ms / 1000) % 60) : 0).toString().padStart(2, '0')
+      '%Y': () => {
+        const date1 = new Date(ms1);
+        const date2 = new Date(ms2);
+        return Math.abs(date1.getFullYear() - date2.getFullYear())
+          .toString()
+          .padStart(2, '0');
+      },
+      '%D': () => {
+        const diff = ms1 - ms2;
+        if (diff <= 0) return '00';
+
+        if (format.indexOf('%Y') > -1 || format.indexOf('%y') > -1) {
+          return parseInt((diff / 86400000) % 365)
+            .toString()
+            .padStart(2, '0');
+        }
+
+        return parseInt(diff / 86400000)
+          .toString()
+          .padStart(2, '0');
+      },
+      '%H': () => {
+        const diff = ms1 - ms2;
+        if (diff <= 0) return '00';
+
+        return parseInt((diff / 3600000) % 60)
+          .toString()
+          .padStart(2, '0');
+      },
+      '%N': () => {
+        const diff = ms1 - ms2;
+        if (diff <= 0) return '00';
+
+        return parseInt((diff / 60000) % 60)
+          .toString()
+          .padStart(2, '0');
+      },
+      '%S': () => {
+        const diff = ms1 - ms2;
+        if (diff <= 0) return '00';
+
+        return parseInt((diff / 1000) % 60)
+          .toString()
+          .padStart(2, '0');
+      }
     };
 
     return Object.keys(allowedFormats).reduce((d, formatKey) => {
@@ -113,43 +180,77 @@
   };
 
   Date.prototype.timeDiff = function (futureDateMilliseconds, format) {
-    const currentTime = this.getTime();
     if (futureDateMilliseconds instanceof Date) {
-      return parseSymbols(futureDateMilliseconds.getTime() - currentTime, format);
+      return parseSymbols(futureDateMilliseconds.getTime(), this.getTime(), format);
     }
 
-    return parseSymbols(futureDateMilliseconds - currentTime, format);
+    return parseSymbols(futureDateMilliseconds, this.getTime(), format);
   };
 
   Date.prototype.timeAgo = function (pastDateMilliseconds, symbols) {
-    const currentTime = this.getTime();
     const names = {
-      '%d': 'day',
-      '%h': 'hour',
+      '%s': 'second',
       '%n': 'minute',
-      '%s': 'second'
+      '%h': 'hour',
+      '%d': 'day',
+      '%m': 'month',
+      '%y': 'year'
     };
     let replacedString;
     if (pastDateMilliseconds instanceof Date) {
       replacedString = parseSymbols(
-        currentTime - pastDateMilliseconds.getTime(),
+        this.getTime(),
+        pastDateMilliseconds.getTime(),
         symbols.join('|')
       ).split('|');
     } else {
-      replacedString = parseSymbols(currentTime - pastDateMilliseconds, symbols.join('|')).split(
+      replacedString = parseSymbols(this.getTime(), pastDateMilliseconds, symbols.join('|')).split(
         '|'
       );
     }
 
-    return (
-      symbols.reduce((compiled, key, i) => {
-        const value = parseInt(replacedString[i]);
-        const nameKey = key.toLowerCase();
-        if (value === 0 || names[nameKey] === undefined) return compiled;
-        const str = compiled ? compiled + ' ' : '';
-        if (value === 1) return str + replacedString[i] + ' ' + names[nameKey];
-        return str + replacedString[i] + ' ' + names[nameKey] + 's';
-      }, null) + ' ago'
-    );
+    const parsedTime = symbols.reduce((compiled, key, i) => {
+      const value = parseInt(replacedString[i]);
+      const nameKey = key.toLowerCase();
+      if (value === 0 || names[nameKey] === undefined) return compiled;
+      const str = compiled ? compiled + ' ' : '';
+      if (value === 1) return str + replacedString[i] + ' ' + names[nameKey];
+      return str + replacedString[i] + ' ' + names[nameKey] + 's';
+    }, null);
+
+    if (!parsedTime) {
+      const nameKeys = Object.keys(names);
+
+      for (let a = 0; a < nameKeys.length; a++) {
+        if (!symbols.includes(nameKeys[a]) && !symbols.includes(nameKeys[a].toUpperCase()))
+          continue;
+
+        let symbol = symbols[symbols.indexOf(nameKeys[a])];
+        if (!symbol) symbol = symbols[symbols.indexOf(nameKeys[a].toUpperCase())];
+
+        return parseSymbols(1, 1, symbol) + ' ' + names[nameKeys[a]] + 's ago';
+      }
+
+      return '';
+    }
+
+    return parsedTime + ' ago';
+  };
+
+  Date.prototype.age = function (now = new Date()) {
+    if (now < this) return 0;
+
+    let diffYear = Math.abs(this.getFullYear() - now.getFullYear());
+
+    if (diffYear > 0) diffYear -= 1;
+
+    if (
+      now.getMonth() > this.getMonth() ||
+      (now.getMonth() === this.getMonth() && now.getDate() >= this.getDate())
+    ) {
+      return diffYear + 1;
+    }
+
+    return diffYear;
   };
 })();

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Date-Polyfill demo</title>
+  <script src="./lib.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    div {
+      width: 50%;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <p>Today is <span id="today"></span></p>
+  </div>
+  <div>
+    <p>Time difference between <b>NOW</b> and <b>Thu Jan 01 1970 07:59:59</b></p>
+    <p id="timeDiffNegativeOne"></p>
+  </div>
+  <div>
+    <p>You landed on this page <span id="landedAgo"></span></p>
+  </div>
+  <div>
+    <p>Count down before January 1, <span id="countDownTargetYear"></span></p>
+    <p id="countDown"></p>
+  </div>
+  <div>
+    <p>Ada Lovelace is now <span id="ageNow"></span> years old.</p>
+    <p>Ada Lovelace was <span id="ageDied"></span> years old when she died.</p>
+  </div>
+  <script>
+    (function () {
+      document.getElementById('countDownTargetYear').innerHTML = new Date().getFullYear() + 1;
+
+      const timeDiffNegativeOne = document.getElementById('timeDiffNegativeOne');
+      const landedAgo = document.getElementById('landedAgo');
+      const countDown = document.getElementById('countDown');
+      const ageNow = document.getElementById('ageNow');
+      const ageDied = document.getElementById('ageDied');
+      const today = document.getElementById('today');
+
+      const countDownTargetDate = new Date(`January 1, ${new Date().getFullYear() + 1}`);
+      const birthdate = new Date('December 10, 1815');
+      const landTime = Date.now();
+
+      (function update() {
+        today.innerHTML = new Date().format('%f %d, %y');
+        timeDiffNegativeOne.innerHTML = new Date(-1).timeDiff(Date.now(), '%Y year(s), %D day(s), %H hour(s), %N minutes and %S seconds');
+        landedAgo.innerHTML = new Date().timeAgo(landTime, ['%Y', '%D', '%H', '%N', '%S']);
+        countDown.innerHTML = new Date().timeDiff(countDownTargetDate, '%D day(s), %H hour(s), %N minutes and %S seconds');
+        ageNow.innerHTML = birthdate.age();
+        ageDied.innerHTML = birthdate.age(new Date('November 27, 1852'));
+
+        setTimeout(update, 1000);
+      })();
+    })();
+  </script>
+</body>
+
+</html>
