@@ -48,6 +48,10 @@ The following symbols are used throughout the operations.
 
 The polyfill uses the `Date.prototype` so it basically extends the `Date` object and can be used with it.
 
+###### Notes
+
+- The behaviour of `%D` changes depending if `%Y` or `%y` is present.
+
 #### Formatting dates: format(formatString)
 
 ###### Parameters
@@ -104,6 +108,11 @@ console.log(
   'time past (with year):',
   new Date(-1).timeDiff(new Date('Mon Aug 27 2018 14:44:18'), '%Y %D %H %N %S')
 ); // 48 250 06 44 18
+
+console.log(
+  'time past (with year):',
+  new Date(-1).timeDiff(new Date('Mon Aug 27 2018 14:44:18'), '%D %H %N %S')
+); // 17,770 06 44 18
 ```
 
 Here you see that the **time past** and **time remaining** are the same but the difference is that the **time past** is counting **up** so the time _increases_ every seconds while the **time remaining** is counting **down** so the time _decreases_ every seconds. They simply looked a like because I used fixed unix time but if you use `Date.now()` you'll see how different they are.
@@ -126,14 +135,13 @@ console.log('time remaining (negative):', future.timeDiff(current, '%D %H %N %S'
 2. **Required** `symbols : array`. Which is the symbols you want to get, in the case above we wanted to get the `days`, `hours`, `minutes`, and `seconds`. Please refer to the **table of symbols**
 
 Like the `timeDiff`, the `timeAgo` counts **up**. So the time past increases every seconds.
-Behaviour of `%d` and `%D` changes depending if `%y` or `%Y` is present.
 
 ```js
 const past = new Date(1532258235447); // Jul 22 2018 19:17:15
 const current = new Date(1782680641000); // Jun 29 2026 05:04:01
 
 console.log('time ago (with year):', current.timeAgo(past, ['%y', '%d', '%h', '%n', '%s'])); // 8 years 343 days 21 hours 46 minutes 45 seconds ago
-console.log('time ago (without year):', current.timeAgo(past, ['%d', '%h', '%n', '%s'])); // 2898 days 21 hours 46 minutes 45 seconds ago
+console.log('time ago (without year):', current.timeAgo(past, ['%d', '%h', '%n', '%s'])); // 2,898 days 21 hours 46 minutes 45 seconds ago
 ```
 
 Basically it's like saying _"from this point in time, tell me how much time past since this point in time"_.

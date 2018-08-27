@@ -23,6 +23,10 @@ require('./lib');
     'time past (with year):',
     new Date(-1).timeDiff(new Date('Mon Aug 27 2018 14:44:18'), '%Y %D %H %N %S')
   ); // 48 250 06 44 18
+  console.log(
+    'time past (without year):',
+    new Date(-1).timeDiff(new Date('Mon Aug 27 2018 14:44:18'), '%D %H %N %S')
+  ); // 17770 06 44 18
   console.log('time remaining (negative):', future.timeDiff(current, '%D %H %N %S')); // 00 00 00 00
 })();
 

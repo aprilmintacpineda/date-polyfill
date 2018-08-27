@@ -56,10 +56,10 @@ describe('timeDiff', () => {
     expect(past.timeDiff(farFuture.getTime(), '%y %d %h %n %s')).toEqual('9 15 2 59 44');
 
     // day should now be a lot bigger now that there's no %y present
-    expect(past.timeDiff(farFuture, '%D %H %N %S')).toEqual('3300 02 59 44');
-    expect(past.timeDiff(farFuture.getTime(), '%D %H %N %S')).toEqual('3300 02 59 44');
+    expect(past.timeDiff(farFuture, '%D %H %N %S')).toEqual('3,300 02 59 44');
+    expect(past.timeDiff(farFuture.getTime(), '%D %H %N %S')).toEqual('3,300 02 59 44');
 
-    expect(past.timeDiff(farFuture, '%d %h %n %s')).toEqual('3300 2 59 44');
-    expect(past.timeDiff(farFuture.getTime(), '%d %h %n %s')).toEqual('3300 2 59 44');
+    expect(past.timeDiff(farFuture, '%d %h %n %s')).toEqual('3,300 2 59 44');
+    expect(past.timeDiff(farFuture.getTime(), '%d %h %n %s')).toEqual('3,300 2 59 44');
   });
 });

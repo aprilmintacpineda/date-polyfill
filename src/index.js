@@ -13,10 +13,10 @@
         if (diff <= 0) return 0;
 
         if (format.indexOf('%Y') > -1 || format.indexOf('%y') > -1) {
-          return parseInt((diff / 86400000) % 365);
+          return parseInt((diff / 86400000) % 365).toLocaleString();
         }
 
-        return parseInt(diff / 86400000);
+        return parseInt(diff / 86400000).toLocaleString();
       },
       '%h': () => {
         const diff = ms1 - ms2;
@@ -47,11 +47,13 @@
 
         if (format.indexOf('%Y') > -1 || format.indexOf('%y') > -1) {
           return parseInt((diff / 86400000) % 365)
+            .toLocaleString()
             .toString()
             .padStart(2, '0');
         }
 
         return parseInt(diff / 86400000)
+          .toLocaleString()
           .toString()
           .padStart(2, '0');
       },

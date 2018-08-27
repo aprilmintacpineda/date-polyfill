@@ -15,10 +15,10 @@
         if (0 >= diff) return 0;
 
         if (-1 < format.indexOf('%Y') || -1 < format.indexOf('%y')) {
-          return parseInt(diff / 86400000 % 365);
+          return parseInt(diff / 86400000 % 365).toLocaleString();
         }
 
-        return parseInt(diff / 86400000);
+        return parseInt(diff / 86400000).toLocaleString();
       },
       '%h': function h() {
         var diff = ms1 - ms2;
@@ -46,10 +46,10 @@
         if (0 >= diff) return '00';
 
         if (-1 < format.indexOf('%Y') || -1 < format.indexOf('%y')) {
-          return parseInt(diff / 86400000 % 365).toString().padStart(2, '0');
+          return parseInt(diff / 86400000 % 365).toLocaleString().toString().padStart(2, '0');
         }
 
-        return parseInt(diff / 86400000).toString().padStart(2, '0');
+        return parseInt(diff / 86400000).toLocaleString().toString().padStart(2, '0');
       },
       '%H': function H() {
         var diff = ms1 - ms2;
