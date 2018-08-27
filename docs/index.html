@@ -26,8 +26,12 @@
     <p>Today is <span id="today"></span></p>
   </div>
   <div>
-    <p>Time difference between <b>NOW</b> and <b>Thu Jan 01 1970 07:59:59</b></p>
+    <p>Time difference between <b>NOW</b> and <b>Thu Jan 01 1970 07:59:59</b> (<b>with year</b>).</p>
     <p id="timeDiffNegativeOne"></p>
+  </div>
+  <div>
+    <p>Time difference between <b>NOW</b> and <b>Thu Jan 01 1970 07:59:59</b> (<b>without year</b>).</p>
+    <p id="timeDiffNegativeOneNoYear"></p>
   </div>
   <div>
     <p>You landed on this page <span id="landedAgo"></span></p>
@@ -45,6 +49,7 @@
       document.getElementById('countDownTargetYear').innerHTML = new Date().getFullYear() + 1;
 
       const timeDiffNegativeOne = document.getElementById('timeDiffNegativeOne');
+      const timeDiffNegativeOneNoYear = document.getElementById('timeDiffNegativeOneNoYear');
       const landedAgo = document.getElementById('landedAgo');
       const countDown = document.getElementById('countDown');
       const ageNow = document.getElementById('ageNow');
@@ -58,6 +63,7 @@
       (function update() {
         today.innerHTML = new Date().format('%f %d, %y');
         timeDiffNegativeOne.innerHTML = new Date(-1).timeDiff(Date.now(), '%Y year(s), %D day(s), %H hour(s), %N minutes and %S seconds');
+        timeDiffNegativeOneNoYear.innerHTML = new Date(-1).timeDiff(Date.now(), '%D day(s), %H hour(s), %N minutes and %S seconds');
         landedAgo.innerHTML = new Date().timeAgo(landTime, ['%Y', '%D', '%H', '%N', '%S']);
         countDown.innerHTML = new Date().timeDiff(countDownTargetDate, '%D day(s), %H hour(s), %N minutes and %S seconds');
         ageNow.innerHTML = birthdate.age();
