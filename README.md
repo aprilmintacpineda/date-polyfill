@@ -18,6 +18,12 @@ import 'date-polyfill';
 require('date-polyfill');
 ```
 
+or in the head tag of your html file.
+
+```html
+<script src="https://unpkg.com/date-polyfill@1.0.18/lib/index.min.js"></script>
+```
+
 ## Table of symbols
 
 The following symbols are used throughout the operations.
