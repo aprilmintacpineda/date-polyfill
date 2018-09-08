@@ -1,7 +1,6 @@
 /** @format */
 
 const babelCore = require('babel-core');
-const readDir = require('readdir-plus');
 const fs = require('fs');
 const path = require('path');
 
@@ -43,6 +42,6 @@ fs.writeFileSync(
   babelCore.transform(content, {
     babelrc: false,
     presets: ['minify']
-  }),
+  }).code,
   'utf8'
 );
