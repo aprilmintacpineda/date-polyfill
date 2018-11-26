@@ -1,183 +1,192 @@
 /** @format */
 
 (() => {
-  function parseSymbols (ms1, ms2, format) {
-    const allowedFormats = {
-      '%y': () => {
-        const date1 = new Date(ms1);
-        const date2 = new Date(ms2);
-        return Math.abs(date1.getFullYear() - date2.getFullYear());
-      },
-      '%d': () => {
-        const diff = ms1 - ms2;
-        if (diff <= 0) return 0;
+  const allowedSymbols = {
+    '%y': (ms1, ms2) => {
+      const date1 = new Date(ms1);
+      const date2 = new Date(ms2);
+      return Math.abs(date1.getFullYear() - date2.getFullYear());
+    },
+    '%d': (ms1, ms2, format) => {
+      const diff = ms1 - ms2;
+      if (diff <= 0) return 0;
 
-        if (format.indexOf('%Y') > -1 || format.indexOf('%y') > -1) {
-          return parseInt((diff / 86400000) % 365).toLocaleString();
-        }
+      if (format.indexOf('%Y') > -1 || format.indexOf('%y') > -1) {
+        return parseInt((diff / 86400000) % 365).toLocaleString();
+      }
 
-        return parseInt(diff / 86400000).toLocaleString();
-      },
-      '%h': () => {
-        const diff = ms1 - ms2;
-        if (diff <= 0) return 0;
-        return parseInt((diff / 3600000) % 60);
-      },
-      '%n': () => {
-        const diff = ms1 - ms2;
-        if (diff <= 0) return 0;
-        return parseInt((diff / 60000) % 60);
-      },
-      '%s': () => {
-        const diff = ms1 - ms2;
-        if (diff <= 0) return 0;
-        return parseInt((diff / 1000) % 60);
-      },
-      // zero prefixed
-      '%Y': () => {
-        const date1 = new Date(ms1);
-        const date2 = new Date(ms2);
-        return Math.abs(date1.getFullYear() - date2.getFullYear())
-          .toString()
-          .padStart(2, '0');
-      },
-      '%D': () => {
-        const diff = ms1 - ms2;
-        if (diff <= 0) return '00';
+      return parseInt(diff / 86400000).toLocaleString();
+    },
+    '%h': (ms1, ms2) => {
+      const diff = ms1 - ms2;
+      if (diff <= 0) return 0;
+      return parseInt((diff / 3600000) % 60);
+    },
+    '%n': (ms1, ms2) => {
+      const diff = ms1 - ms2;
+      if (diff <= 0) return 0;
+      return parseInt((diff / 60000) % 60);
+    },
+    '%s': (ms1, ms2) => {
+      const diff = ms1 - ms2;
+      if (diff <= 0) return 0;
+      return parseInt((diff / 1000) % 60);
+    },
+    // zero prefixed
+    '%Y': (ms1, ms2) => {
+      const date1 = new Date(ms1);
+      const date2 = new Date(ms2);
+      return Math.abs(date1.getFullYear() - date2.getFullYear())
+        .toString()
+        .padStart(2, '0');
+    },
+    '%D': (ms1, ms2, format) => {
+      const diff = ms1 - ms2;
+      if (diff <= 0) return '00';
 
-        if (format.indexOf('%Y') > -1 || format.indexOf('%y') > -1) {
-          return parseInt((diff / 86400000) % 365)
-            .toLocaleString()
-            .toString()
-            .padStart(2, '0');
-        }
-
-        return parseInt(diff / 86400000)
+      if (format.indexOf('%Y') > -1 || format.indexOf('%y') > -1) {
+        return parseInt((diff / 86400000) % 365)
           .toLocaleString()
           .toString()
           .padStart(2, '0');
-      },
-      '%H': () => {
-        const diff = ms1 - ms2;
-        if (diff <= 0) return '00';
-
-        return parseInt((diff / 3600000) % 60)
-          .toString()
-          .padStart(2, '0');
-      },
-      '%N': () => {
-        const diff = ms1 - ms2;
-        if (diff <= 0) return '00';
-
-        return parseInt((diff / 60000) % 60)
-          .toString()
-          .padStart(2, '0');
-      },
-      '%S': () => {
-        const diff = ms1 - ms2;
-        if (diff <= 0) return '00';
-
-        return parseInt((diff / 1000) % 60)
-          .toString()
-          .padStart(2, '0');
       }
-    };
 
-    return Object.keys(allowedFormats).reduce((d, formatKey) => {
-      if (d.indexOf(formatKey) >= 0) return d.replace(formatKey, allowedFormats[formatKey]());
-      return d;
+      return parseInt(diff / 86400000)
+        .toLocaleString()
+        .toString()
+        .padStart(2, '0');
+    },
+    '%H': (ms1, ms2) => {
+      const diff = ms1 - ms2;
+      if (diff <= 0) return '00';
+
+      return parseInt((diff / 3600000) % 60)
+        .toString()
+        .padStart(2, '0');
+    },
+    '%N': (ms1, ms2) => {
+      const diff = ms1 - ms2;
+      if (diff <= 0) return '00';
+
+      return parseInt((diff / 60000) % 60)
+        .toString()
+        .padStart(2, '0');
+    },
+    '%S': (ms1, ms2) => {
+      const diff = ms1 - ms2;
+      if (diff <= 0) return '00';
+
+      return parseInt((diff / 1000) % 60)
+        .toString()
+        .padStart(2, '0');
+    }
+  };
+
+  function parseSymbols (ms1, ms2, format) {
+    return Object.keys(allowedSymbols).reduce((parsed, symbolKey) => {
+      if (parsed.indexOf(symbolKey) > -1) {
+        return parsed.replace(symbolKey, allowedSymbols[symbolKey](ms1, ms2, format));
+      }
+
+      return parsed;
     }, format);
   }
 
+  const toTwelveHourFormatMemoized = {};
+
   function toTwelveHourFormat (hours) {
+    if (hours in toTwelveHourFormatMemoized) {
+      return toTwelveHourFormatMemoized[hours];
+    }
+
     const twelveHourFormat = hours % 12;
     if (twelveHourFormat === 0) return 12;
     return twelveHourFormat;
   }
 
-  Date.prototype.format = function (format) {
-    // January => Jan, Sunday => Sun
-    function shorten (s, l) {
-      const reversed = s
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+  const shortMonthNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
+  const weekNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const shortWeekNames = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat'];
+  const allowedFormats = {
+    '%y': instance => instance.getFullYear(),
+    '%m': instance => instance.getMonth() + 1,
+    '%d': instance => instance.getDate(),
+    '%f': instance => monthNames[instance.getMonth()],
+    '%w': instance => weekNames[instance.getDay()],
+    '%i': instance => instance.getHours(),
+    '%h': instance => toTwelveHourFormat(instance.getHours()),
+    '%n': instance => instance.getMinutes(),
+    '%s': instance => instance.getSeconds(),
+    '%a': instance => (instance.getHours() >= 12 ? 'PM' : 'AM'),
+    // shortened
+    '%Y': instance => {
+      const year = instance.getFullYear().toString();
+      return year.substring(year.length - 2);
+    },
+    '%F': instance => shortMonthNames[instance.getMonth()],
+    '%W': instance => shortWeekNames[instance.getDay()],
+    // zero prefixed
+    '%I': instance =>
+      instance
+        .getHours()
         .toString()
-        .split('')
-        .reverse()
-        .join('');
-      return reversed
-        .substr(reversed.length - l)
-        .split('')
-        .reverse()
-        .join('');
-    }
+        .padStart(2, '0'),
+    '%M': instance => (instance.getMonth() + 1).toString().padStart(2, '0'),
+    '%D': instance =>
+      instance
+        .getDate()
+        .toString()
+        .padStart(2, '0'),
+    '%H': instance =>
+      toTwelveHourFormat(instance.getHours())
+        .toString()
+        .padStart(2, '0'),
+    '%N': instance =>
+      instance
+        .getMinutes()
+        .toString()
+        .padStart(2, '0'),
+    '%S': instance =>
+      instance
+        .getSeconds()
+        .toString()
+        .padStart(2, '0')
+  };
 
-    const monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
-    const weekNames = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday'
-    ];
-    const allowedFormats = {
-      '%y': () => this.getFullYear(),
-      '%m': () => this.getMonth() + 1,
-      '%d': () => this.getDate(),
-      '%f': () => monthNames[this.getMonth()],
-      '%w': () => weekNames[this.getDay()],
-      '%i': () => this.getHours(),
-      '%h': () => toTwelveHourFormat(this.getHours()),
-      '%n': () => this.getMinutes(),
-      '%s': () => this.getSeconds(),
-      '%a': () => (this.getHours() >= 12 ? 'PM' : 'AM'),
-      // shortened
-      '%Y': () => {
-        const year = this.getFullYear().toString();
-        return year.substring(year.length - 2);
-      },
-      '%F': () => shorten(monthNames[this.getMonth()], 3),
-      '%W': () => shorten(weekNames[this.getDay()], 3),
-      // zero prefixed
-      '%I': () =>
-        this.getHours()
-          .toString()
-          .padStart(2, '0'),
-      '%M': () => (this.getMonth() + 1).toString().padStart(2, '0'),
-      '%D': () =>
-        this.getDate()
-          .toString()
-          .padStart(2, '0'),
-      '%H': () =>
-        toTwelveHourFormat(this.getHours())
-          .toString()
-          .padStart(2, '0'),
-      '%N': () =>
-        this.getMinutes()
-          .toString()
-          .padStart(2, '0'),
-      '%S': () =>
-        this.getSeconds()
-          .toString()
-          .padStart(2, '0')
-    };
+  Date.prototype.format = function (format) {
+    return Object.keys(allowedFormats).reduce((formatted, formatKey) => {
+      if (formatted.indexOf(formatKey) >= 0) {
+        return formatted.replace(formatKey, allowedFormats[formatKey](this));
+      }
 
-    return Object.keys(allowedFormats).reduce((d, formatKey) => {
-      if (d.indexOf(formatKey) >= 0) return d.replace(formatKey, allowedFormats[formatKey]());
-      return d;
+      return formatted;
     }, format);
   };
 
@@ -189,15 +198,16 @@
     return parseSymbols(futureDateMilliseconds, this.getTime(), format);
   };
 
+  const names = {
+    '%s': 'second',
+    '%n': 'minute',
+    '%h': 'hour',
+    '%d': 'day',
+    '%m': 'month',
+    '%y': 'year'
+  };
+
   Date.prototype.timeAgo = function (pastDateMilliseconds, symbols) {
-    const names = {
-      '%s': 'second',
-      '%n': 'minute',
-      '%h': 'hour',
-      '%d': 'day',
-      '%m': 'month',
-      '%y': 'year'
-    };
     let replacedString;
     if (pastDateMilliseconds instanceof Date) {
       replacedString = parseSymbols(
@@ -214,9 +224,17 @@
     const parsedTime = symbols.reduce((compiled, key, i) => {
       const value = parseInt(replacedString[i]);
       const nameKey = key.toLowerCase();
-      if (value === 0 || names[nameKey] === undefined) return compiled;
+
+      if (value === 0 || nameKey in names === false) {
+        return compiled;
+      }
+
       const str = compiled ? compiled + ' ' : '';
-      if (value === 1) return str + replacedString[i] + ' ' + names[nameKey];
+
+      if (value === 1) {
+        return str + replacedString[i] + ' ' + names[nameKey];
+      }
+
       return str + replacedString[i] + ' ' + names[nameKey] + 's';
     }, null);
 
@@ -239,16 +257,22 @@
     return parsedTime + ' ago';
   };
 
-  Date.prototype.age = function (now = new Date()) {
-    if (now < this) return 0;
+  Date.prototype.age = function (now) {
+    const context = now || new Date();
 
-    let diffYear = Math.abs(this.getFullYear() - now.getFullYear());
+    if (context < this) {
+      return 0;
+    }
 
-    if (diffYear > 0) diffYear -= 1;
+    let diffYear = Math.abs(this.getFullYear() - context.getFullYear());
+
+    if (diffYear > 0) {
+      diffYear -= 1;
+    }
 
     if (
-      now.getMonth() > this.getMonth() ||
-      (now.getMonth() === this.getMonth() && now.getDate() >= this.getDate())
+      context.getMonth() > this.getMonth() ||
+      (context.getMonth() === this.getMonth() && context.getDate() >= this.getDate())
     ) {
       return diffYear + 1;
     }
