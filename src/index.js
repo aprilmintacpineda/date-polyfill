@@ -242,7 +242,7 @@
       const nameKeys = Object.keys(names);
 
       for (let a = 0; a < nameKeys.length; a++) {
-        if (!symbols.includes(nameKeys[a]) && !symbols.includes(nameKeys[a].toUpperCase()))
+        if (symbols.indexOf(nameKeys[a]) < 0 && symbols.indexOf(nameKeys[a].toUpperCase()) < 0)
           continue;
 
         let symbol = symbols[symbols.indexOf(nameKeys[a])];

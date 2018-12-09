@@ -10,6 +10,7 @@
     "README.md"
   ],
   "scripts": {
+    "reinstallNodeModules": "rm -rf package-lock.json node_modules && npm i",
     "playground": "npm run build && node playground.js",
     "test": "clear && npm run build && jest --coverage --env=node",
     "copy-over": "cp lib/index.js docs/lib.js",
@@ -36,16 +37,16 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
-    "babel-eslint": "^8.2.6",
-    "babel-plugin-minify-constant-folding": "^0.4.3",
-    "babel-plugin-minify-dead-code-elimination": "^0.4.3",
+    "babel-eslint": "^10.0.1",
+    "babel-plugin-minify-constant-folding": "^0.5.0",
+    "babel-plugin-minify-dead-code-elimination": "^0.5.0",
     "babel-plugin-minify-flip-comparisons": "^0.4.3",
     "babel-plugin-transform-minify-booleans": "^6.9.4",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-minify": "^0.4.3",
-    "eslint": "^5.5.0",
-    "jest": "^23.5.0",
-    "prettier": "^1.14.2",
+    "babel-preset-minify": "^0.5.0",
+    "eslint": "^5.10.0",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.3",
     "readdir-plus": "^1.1.0"
   }
 }
