@@ -1,6 +1,6 @@
 {
   "name": "date-polyfill",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Added features to Javascript's Date Interface.",
   "main": "lib/index.js",
   "files": [
